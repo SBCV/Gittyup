@@ -205,5 +205,5 @@ jobs:
         continue-on-error: true
         run: |
           cd build/release
-          ninja check
+          QT_QPA_PLATFORM=offscreen ninja check
 ...
