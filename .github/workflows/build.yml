@@ -216,8 +216,7 @@ jobs:
           echo "ldd $Qt5_DIR/plugins/platforms/libqxcb.so"
           echo $DISPLAY
           export QT_DEBUG_PLUGINS=1
-          ldd $Qt5_DIR/plugins/platforms/libqxcb.so
-          export QT_QPA_PLATFORM=offscreen
+          sudo xhost +si:localuser:$USER
           cd build/release
           ninja check
 ...
