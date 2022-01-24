@@ -217,7 +217,7 @@ jobs:
           echo $DISPLAY
           export QT_DEBUG_PLUGINS=1
           ldd $Qt5_DIR/plugins/platforms/libqxcb.so
+          export DISPLAY=:0
           cd build/release
-          export QT_QPA_PLATFORM=minimal
-          qtminimal && ninja check
+          ninja check
 ...
