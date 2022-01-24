@@ -215,6 +215,7 @@ jobs:
           sudo apt install -y -q libxcb-xinerama0
           echo "ldd $Qt5_DIR/plugins/platforms/libqxcb.so"
           echo $DISPLAY
+          export QT_DEBUG_PLUGINS=1
           ldd $Qt5_DIR/plugins/platforms/libqxcb.so
           cd build/release
           ninja check
