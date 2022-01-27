@@ -16,3 +16,6 @@
 [submodule "dep/hunspell/hunspell"]
 	path = dep/hunspell/hunspell
 	url = https://github.com/hunspell/hunspell
+[submodule "dep/scintilla/lexilla"]
+	path = dep/scintilla/lexilla
+	url = git@github.com:ScintillaOrg/lexilla.git
