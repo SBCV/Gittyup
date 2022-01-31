@@ -906,7 +906,7 @@ bool Repository::checkout(
   const Commit &commit,
   CheckoutCallbacks *callbacks,
   const QStringList &paths,
-  int strategy, const QString& targetDirectory)
+  int strategy, const QString &targetDirectory)
 {
   git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
   opts.checkout_strategy = strategy;
