@@ -201,7 +201,7 @@ public:
   bool checkout(const Commit &commit,
     CheckoutCallbacks *callbacks = nullptr,
     const QStringList &paths = QStringList(),
-    int strategy = GIT_CHECKOUT_SAFE, const QString &targetDirectory = "");
+    int strategy = GIT_CHECKOUT_SAFE, const QString &targetDirectory = QString());
 
   // Clean up after merge/rebase/cherry-pick/etc.
   int state() const;
