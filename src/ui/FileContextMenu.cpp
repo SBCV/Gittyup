@@ -251,7 +251,7 @@ FileContextMenu::FileContextMenu(
 
 
     QAction *openWith = addAction(tr("Open with ..."), [this, view, files] {
-      QString folder = ".";
+      QString folder = QDir::homePath();
       view->checkout(view->commits().first(), QStringList(files.first()), folder);
       view->setViewMode(RepoView::DoubleTree);
       QDesktopServices::openUrl(QUrl::fromLocalFile(QDir(folder).filePath(files.first())));
