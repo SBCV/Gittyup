@@ -390,31 +390,9 @@ void DoubleTreeWidget::loadEditorContent(const QModelIndex &index)
   QString name = index.data(Qt::EditRole).toString();
   QList<git::Commit> commits = RepoView::parentView(this)->commits();
   git::Commit commit = !commits.isEmpty() ? commits.first() : git::Commit();
-  git::Tree tree = commit.tree();
 
-  // searching for the correct blob
-  auto list = name.split("/");
-  bool found = false;
-  git::Blob blob;
-  for (int path_depth = 0; path_depth < list.count(); path_depth++) {
-    auto element = list[path_depth];
-    found = false;
-    for (int i = 0; i < tree.count(); ++i) {
-      auto n = tree.name(i);
-      if (n == element) {
-        if (path_depth >= list.count() -1)
-          blob = tree.object(i);
-        else
-          tree = tree.object(i);
-        found = true;
-        break;
-      }
-    }
-    if (!found)
-      break;
-  }
-
-  if (found)
+  auto blob = commit.blob(name);
+  if (blob.isValid())
     mEditor->load(name, blob, commit);
 
   mDiffView->enable(true);

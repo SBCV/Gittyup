@@ -237,24 +237,49 @@ FileContextMenu::FileContextMenu(
     });
 
     // Checkout to ...
-    QAction *checkoutTo = addAction(tr("Checkout to ..."), [this, view, files] {
+	QAction *checkoutTo = addAction(tr("Save Selected Version as ..."), [this, view, files] {
       QFileDialog d(this);
       d.setFileMode(QFileDialog::FileMode::Directory);
       d.setOption(QFileDialog::ShowDirsOnly);
-      d.setWindowTitle(tr("Select checkout directory"));
+	  d.setWindowTitle(tr("Select new file directory"));
       if (d.exec()) {
           auto folder = d.selectedFiles().first();
-          view->checkout(view->commits().first(), files, folder);
+			for (const auto& file: files) {
+				// assumption. file is a file not a folder!
+				const auto blob = view->commits().first().blob(file);
+				if (!blob.isValid())
+					continue;
+
+				const QString& filename = file.split("/").last();
+				QFile f(folder + "/" + filename);
+				if (!f.open(QFile::ReadWrite))
+				  return false;
+
+				f.write(blob.content());
+				f.close();
+			}
           view->setViewMode(RepoView::DoubleTree);
       }
+	  return true;
       });
 
 
-    QAction *openWith = addAction(tr("Open with ..."), [this, view, files] {
-      QString folder = QDir::homePath();
-      view->checkout(view->commits().first(), QStringList(files.first()), folder);
-      view->setViewMode(RepoView::DoubleTree);
-      QDesktopServices::openUrl(QUrl::fromLocalFile(QDir(folder).filePath(files.first())));
+	QAction *openWith = addAction(tr("Open this Version with ..."), [this, view, files] {
+	  QString folder = QDir::tempPath();
+	  const auto& file = files.first();
+	  const auto blob = view->commits().first().blob(file);
+	  if (!blob.isValid())
+		  return;
+
+	  auto filename = file.split("/").last();
+	  QFile f(folder + "/" + filename);
+	  if (!f.open(QFile::ReadWrite))
+		return;
+
+	  f.write(blob.content());
+	  f.close();
+
+	  QDesktopServices::openUrl(QUrl::fromLocalFile(QDir(folder).filePath(file)));
     });
 
     auto isBare = view->repo().isBare();
@@ -262,12 +287,12 @@ FileContextMenu::FileContextMenu(
     checkoutTo->setEnabled(!isBare);
     openWith->setEnabled(!isBare);
 
+	/* disable checkout if the file is already
+	 * in the current working directory */
     git::Commit commit = commits.first();
     foreach (const QString &file, files) {
       if (commit.tree().id(file) == repo.workdirId(file)) {
         checkout->setEnabled(false);
-        checkoutTo->setEnabled(false);
-        openWith->setEnabled(false);
         break;
       }
     }
