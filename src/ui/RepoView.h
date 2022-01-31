@@ -238,7 +238,7 @@ public:
 
   // checkout
   void promptToCheckout();
-  void checkout(const git::Commit &commit, const QStringList &paths, const QString &targetDirectory = "");
+  void checkout(const git::Commit &commit, const QStringList &paths, const QString &targetDirectory = QString());
   void checkout(const git::Reference &ref, bool detach = false);
   void checkout(const git::Commit &commit,
     const git::Reference &ref = git::Reference(),
